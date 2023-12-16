@@ -20,6 +20,12 @@ end
 
 :mnesia.transaction(write_action)
 
+write_action = fn ->
+  :mnesia.write({:statistic, 3, "gggg", "sss"})
+end
+
+:mnesia.transaction(write_action)
+
 :ets.tab2list(:statistic)
 
 :mnesia.system_info()

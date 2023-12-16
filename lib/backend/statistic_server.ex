@@ -6,10 +6,16 @@ defmodule Backend.StatisticServer do
       elem(__CALLER__.function, 0)
   end
 
+  ## API
   def start_link(_arg) do
     GenServer.start_link(__MODULE__, %{current_users: 0}, name: :statistic_server)
   end
 
+  def get_all_users() do
+    GenServer.call(:statistic_server, :get_all_users)
+  end
+
+  ## Callback
   @impl true
   def init(state) do
     spawn(fn() -> create_table() end)
@@ -28,8 +34,8 @@ defmodule Backend.StatisticServer do
   end
 
   @impl true
-  def handle_call(_, _from, state) do
-    {:reply, :ok, state}
+  def handle_call(:get_all_users, _from, state) do
+    {:reply, :mnesia.table_info(:statistic, :size), state}
   end
 
   @impl true
@@ -49,7 +55,7 @@ defmodule Backend.StatisticServer do
           Logger.info("db, mnesia start ok.")
           :mnesia.add_table_copy(:statistic, node, :ram_copies)
           table = :mnesia.create_table(:statistic, attributes: [:id, :name], ram_copies: [node()] ++ Node.list(), type: :ordered_set)
-          Logger.info("db, mnesia create result: #{table}.")
+          Logger.info("db, mnesia create result: #{inspect(table)}.")
         end
     end
   end
