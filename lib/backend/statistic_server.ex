@@ -12,28 +12,7 @@ defmodule Backend.StatisticServer do
 
   @impl true
   def init(state) do
-    Logger.debug("zlyxtam_debug_fun:#{f_name()}/#{__ENV__.line}_state_#{inspect(state, pretty: true, limit: :infinity)}")
-    # info = :ets.info(:statistic)
-    :mnesia.create_schema([node()])
-    :mnesia.start()
-
-    Logger.info("db, mnesia start ok.")
-
-    try do
-      info = :mnesia.table_info(:statistic, :all)
-      Logger.debug("zlyxtam_debug_fun:#{f_name()}/#{__ENV__.line}_info_#{inspect(info, pretty: true, limit: :infinity)}")
-      :ok
-    catch
-      _error, {:aborted, {:no_exists, :statistic, :all}} ->
-       Logger.debug("zlyxtam_debug_fun:#{f_name()}/#{__ENV__.line}_no_exist_")
-       :ok
-    end
-
-    # Logger.debug("zlyxtam_debug_fun:#{f_name()}/#{__ENV__.line}_info_#{inspect(info, pretty: true, limit: :infinity)}")
-    # :ets.new(:statistic, [:ordered_set, :named_table])
-
-    table = :mnesia.create_table(:statistic, attributes: [:id, :name], ram_copies: [node()], type: :ordered_set)
-    Logger.debug("zlyxtam_debug_fun:#{f_name()}/#{__ENV__.line}_table_#{inspect(table, pretty: true, limit: :infinity)}")
+    spawn(fn() -> create_table() end)
     {:ok, state}
   end
 
@@ -56,6 +35,23 @@ defmodule Backend.StatisticServer do
   @impl true
   def terminate(_reason, _) do
     :ok
+  end
+
+  defp create_table() do
+    case Node.list() do
+      [] ->
+        :ok
+      nodes ->
+        for node <- nodes do
+          :mnesia.create_schema([node()] ++ Node.list)
+          :mnesia.start()
+          :mnesia.change_config(:extra_db_nodes,[node()] ++ Node.list)
+          Logger.info("db, mnesia start ok.")
+          :mnesia.add_table_copy(:statistic, node, :ram_copies)
+          table = :mnesia.create_table(:statistic, attributes: [:id, :name], ram_copies: [node()] ++ Node.list(), type: :ordered_set)
+          Logger.info("db, mnesia create result: #{table}.")
+        end
+    end
   end
 
 end

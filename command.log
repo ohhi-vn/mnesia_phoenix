@@ -9,7 +9,22 @@ Process.send(proc, :terminate, [])
 Start Node
 
 * Terminal 1:
-  PORT=4000 iex --sname a@localhost -S mix phx.server
-
+  RELEASE_COOKIE=abc PORT=4000 iex --sname a@localhost --cookie abc -S mix phx.server
 * Terminal 2:
-  PORT=4001 iex --sname b@localhost -S mix phx.server
+  PRELEASE_COOKIE=abc PORT=4001 iex --sname b@localhost --cookie abc -S mix phx.server
+
+write_action = fn ->
+  :mnesia.write({:statistic, 1, "foo"})
+  :mnesia.write({:statistic, 2, "bar"})
+end
+
+:mnesia.transaction(write_action)
+
+:ets.tab2list(:statistic)
+
+:mnesia.system_info()
+
+:mnesia.stop()
+
+:mnesia.delete_schema([node()])
+:mnesia.delete_table(:statistic)
