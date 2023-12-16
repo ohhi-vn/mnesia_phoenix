@@ -9,13 +9,15 @@ import Config
 
 # Configures the endpoint
 config :supervisor_phoenix, SupervisorPhoenixWeb.Endpoint,
-  url: [host: "localhost"],
+  url: [host: "localhost", port: System.get_env("PORT") || 4000],
   render_errors: [
     formats: [html: SupervisorPhoenixWeb.ErrorHTML, json: SupervisorPhoenixWeb.ErrorJSON],
     layout: false
   ],
   pubsub_server: SupervisorPhoenix.PubSub,
-  live_view: [signing_salt: "scTcVLKy"]
+  live_view: [signing_salt: "scTcVLKy"],
+  adapter: Bandit.PhoenixAdapter
+
 
 # Configures the mailer
 #
@@ -55,6 +57,17 @@ config :logger, :console,
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
+
+config :libcluster,
+  topologies: [
+    epmd_example: [
+      strategy: Elixir.Cluster.Strategy.Epmd,
+      config: [
+        timeout: 30_000,
+        hosts: [:"a@127.0.0.1", :"b@127.0.0.1"]]]],
+        connect: {:net_kernel, :connect_node, []},
+        disconnect: {:erlang, :disconnect_node, []},
+        list_nodes: {:erlang, :nodes, [:connected]}
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

@@ -7,15 +7,24 @@ defmodule SupervisorPhoenix.Application do
 
   @impl true
   def start(_type, _args) do
+    topologies = [
+      example: [
+        strategy: Cluster.Strategy.Epmd,
+        config: [hosts: [:"a@localhost", :"b@localhost"]]
+      ]
+    ]
+
     children = [
       # Start the Telemetry supervisor
+      {Cluster.Supervisor, [topologies, [name: SupervisorPhoenixWeb.ClusterSupervisor]]},
       SupervisorPhoenixWeb.Telemetry,
       # Start the PubSub system
       {Phoenix.PubSub, name: SupervisorPhoenix.PubSub},
       # Start Finch
       {Finch, name: SupervisorPhoenix.Finch},
       # Start the Endpoint (http/https)
-      SupervisorPhoenixWeb.Endpoint
+      SupervisorPhoenixWeb.Endpoint,
+      Backend.StatisticServer
       # Start a worker by calling: SupervisorPhoenix.Worker.start_link(arg)
       # {SupervisorPhoenix.Worker, arg}
     ]

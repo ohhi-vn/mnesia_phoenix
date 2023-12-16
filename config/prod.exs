@@ -16,5 +16,18 @@ config :swoosh, local: false
 # Do not print debug messages in production
 config :logger, level: :info
 
+config :supervisor_phoenix, SupervisorPhoenixWeb.Endpoint,
+  # Binding to loopback ipv4 address prevents access from other machines.
+  # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
+  http: [ip: {0, 0, 0, 0}, port: 4000 || System.get_env("PORT")],
+  check_origin: false,
+  code_reloader: true,
+  debug_errors: true,
+  secret_key_base: "IxHwJpQk34Xrq0ARjjb94F/YUSe0rfJxdX256w/PatzbKEOTQF5BwJbdvP84AWs1",
+  watchers: [
+    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
+    tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
+  ]
+
 # Runtime production configuration, including reading
 # of environment variables, is done on config/runtime.exs.

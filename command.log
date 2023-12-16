@@ -1,0 +1,15 @@
+proc = Process.whereis(:statistic_server)
+
+Process.send(proc, :terminate, [])
+:mnesia.change_table_copy_type(:statistic_server, node(), :disc_copies)
+:mnesia.table_info(:statistic, :all)
+
+
+
+Start Node
+
+* Terminal 1:
+  PORT=4000 iex --sname a@localhost -S mix phx.server
+
+* Terminal 2:
+  PORT=4001 iex --sname b@localhost -S mix phx.server

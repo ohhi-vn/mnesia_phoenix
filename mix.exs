@@ -19,7 +19,7 @@ defmodule SupervisorPhoenix.MixProject do
   def application do
     [
       mod: {SupervisorPhoenix.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :mnesia]
     ]
   end
 
@@ -46,7 +46,8 @@ defmodule SupervisorPhoenix.MixProject do
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
-      {:plug_cowboy, "~> 2.5"}
+      {:bandit, "~> 1.0"},
+      {:libcluster, "~> 3.3"}
     ]
   end
 
