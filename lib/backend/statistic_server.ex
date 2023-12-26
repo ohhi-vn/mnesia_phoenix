@@ -8,7 +8,7 @@ defmodule Backend.StatisticServer do
 
   ## API
   def start_link(_arg) do
-    GenServer.start_link(__MODULE__, %{current_users: 0}, name: :statistic_server)
+    GenServer.start_link(__MODULE__, %{current_users: 0}, name: :statistic_server )
   end
 
   def get_all_users() do

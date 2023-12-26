@@ -1,5 +1,6 @@
 defmodule SupervisorPhoenixWeb.Router do
   use SupervisorPhoenixWeb, :router
+  import Phoenix.LiveView.Router
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -18,8 +19,8 @@ defmodule SupervisorPhoenixWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    live "/statistic", StatisticLiveView
   end
-
   # Other scopes may use custom stacks.
   # scope "/api", SupervisorPhoenixWeb do
   #   pipe_through :api
