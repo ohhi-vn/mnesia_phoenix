@@ -1,18 +1,70 @@
 defmodule Backend.StatisticServer do
   use GenServer
+  alias Phoenix.PubSub
 
   require Logger
   defmacro f_name() do
       elem(__CALLER__.function, 0)
   end
 
+  @tab :statistic
+  @tab_attr [:id, :name]
+
+  @pubsub_statistic SupervisorPhoenix.PubSub
+  @topic "statistic:1"
+
   ## API
   def start_link(_arg) do
-    GenServer.start_link(__MODULE__, %{current_users: 0}, name: :statistic_server )
+    GenServer.start_link(__MODULE__, %{current_users: 0}, name: :statistic_server)
   end
 
   def get_all_users() do
     GenServer.call(:statistic_server, :get_all_users)
+  end
+
+
+  def store_users() do
+    write_action = fn ->
+
+      :mnesia.write({:statistic, 1, "foo"})
+      :mnesia.write({:statistic, 2, "bar"})
+    end
+
+    result = :mnesia.transaction(write_action)
+    Logger.debug("zlyxtam_debug_fun:#{f_name()}/#{__ENV__.line}_result_#{inspect(result, pretty: true, limit: :infinity)}")
+
+    current_users = get_all_users()
+    Logger.debug("zlyxtam_debug_fun:#{f_name()}/#{__ENV__.line}_current_users_#{inspect(current_users, pretty: true, limit: :infinity)}")
+    PubSub.broadcast(@pubsub_statistic, @topic, {:update_user, current_users})
+
+    # simulate store user here
+  end
+
+  def store_users2() do
+    write_action = fn ->
+
+      :mnesia.write({:statistic, 3, "aaa"})
+      :mnesia.write({:statistic, 4, "cccc"})
+    end
+
+    result = :mnesia.transaction(write_action)
+
+    Logger.debug("zlyxtam_debug_fun:#{f_name()}/#{__ENV__.line}_result_#{inspect(result, pretty: true, limit: :infinity)}")
+
+
+    current_users = get_all_users()
+    Logger.debug("zlyxtam_debug_fun:#{f_name()}/#{__ENV__.line}_current_users_#{inspect(current_users, pretty: true, limit: :infinity)}")
+    PubSub.broadcast(@pubsub_statistic, @topic, {:update_user, current_users})
+
+    # simulate store user here
+  end
+
+  def store_users(number) when is_integer(number) do
+    # simulate store user here
+  end
+
+  def store_users(_number) do
+    Logger.error("number should be integer")
   end
 
   ## Callback
@@ -29,7 +81,11 @@ defmodule Backend.StatisticServer do
   end
 
   @impl true
-  def handle_cast(_, state) do
+  def handle_cast({:store_user, id, name}, state) do
+    write_action = fn ->
+      :mnesia.write({:statistic, id, name})
+    end
+    :mnesia.transaction(write_action)
     {:noreply, state}
   end
 
@@ -48,16 +104,15 @@ defmodule Backend.StatisticServer do
       [] ->
         :ok
       nodes ->
-        for node <- nodes do
-          :mnesia.create_schema([node()] ++ Node.list)
-          :mnesia.start()
-          :mnesia.change_config(:extra_db_nodes,[node()] ++ Node.list)
-          Logger.info("db, mnesia start ok.")
-          :mnesia.add_table_copy(:statistic, node, :ram_copies)
-          table = :mnesia.create_table(:statistic, attributes: [:id, :name], ram_copies: [node()] ++ Node.list(), type: :ordered_set)
-          Logger.info("db, mnesia create result: #{inspect(table)}.")
-        end
+        :mnesia.create_schema([node()] ++ nodes)
+        :mnesia.start()
+        :mnesia.change_config(:extra_db_nodes,[node()] ++ nodes)
+        Logger.info("db, mnesia start ok.")
+        table = :mnesia.create_table(@tab, attributes: @tab_attr,
+                                     ram_copies: [node()] ++ nodes, type: :set)
+        Logger.info("db, mnesia create result: #{inspect(table)}.")
+        # create = :mnesia.add_table_copy(:statistic, node, :ram_copies)
+        # Logger.info("zlyxtam create #{inspect(create)}")
     end
   end
-
 end

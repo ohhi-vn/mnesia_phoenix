@@ -19,7 +19,7 @@ defmodule SupervisorPhoenix.Application do
       {Cluster.Supervisor, [topologies, [name: SupervisorPhoenixWeb.ClusterSupervisor]]},
       SupervisorPhoenixWeb.Telemetry,
       # Start the PubSub system
-      {Phoenix.PubSub, name: SupervisorPhoenix.PubSub},
+      {Phoenix.PubSub, name: SupervisorPhoenix.PubSub, adapter: Phoenix.PubSub.PG2},
       # Start Finch
       {Finch, name: SupervisorPhoenix.Finch},
       # Start the Endpoint (http/https)

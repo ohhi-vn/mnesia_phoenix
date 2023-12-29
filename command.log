@@ -21,7 +21,7 @@ end
 :mnesia.transaction(write_action)
 
 write_action = fn ->
-  :mnesia.write({:statistic, 3, "gggg", "sss"})
+  :mnesia.write({:statistic, 3, "gggg",})
 end
 
 :mnesia.transaction(write_action)
@@ -34,3 +34,9 @@ end
 
 :mnesia.delete_schema([node()])
 :mnesia.delete_table(:statistic)
+
+
+alias Backend.StatisticServer
+
+StatisticServer.store_users()
+StatisticServer.store_users2()
