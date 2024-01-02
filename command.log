@@ -41,4 +41,6 @@ alias Backend.StatisticServer
 StatisticServer.store_users()
 StatisticServer.store_users2()
 
+StatisticServer.simulate_store_users(10)
+
 :init.stop()

@@ -1,5 +1,5 @@
 # Mnesia real-time distributed database on clustering Elixir nodes
-# Guide
+## Guide
 
 To start app:
 

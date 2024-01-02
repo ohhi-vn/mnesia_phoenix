@@ -22,6 +22,33 @@ defmodule Backend.StatisticServer do
     GenServer.call(:statistic_server, :get_all_users)
   end
 
+  def simulate_store_users(num) do
+    Enum.each(
+      1..num,
+      fn _number ->
+        write_action = fn ->
+          random_num = generate_random_number()
+          random_string = generate_random_string()
+          id = :erlang.phash2({random_num, random_string})
+
+          :mnesia.write({:statistic, id, random_string})
+        end
+        :mnesia.transaction(write_action)
+      end)
+
+      current_users = get_all_users()
+      Logger.debug("zlyxtam_debug_fun:#{f_name()}/#{__ENV__.line}_current_users_#{inspect(current_users, pretty: true, limit: :infinity)}")
+      PubSub.broadcast(@pubsub_statistic, @topic, {:update_user, current_users})
+
+  end
+
+  defp generate_random_number() do
+    :rand.uniform(100000000)  # Change 100 to the desired upper limit for random numbers
+  end
+
+  defp generate_random_string() do
+    :crypto.strong_rand_bytes(8) |> Base.encode16()
+  end
 
   def store_users() do
     write_action = fn ->
