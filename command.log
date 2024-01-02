@@ -40,3 +40,5 @@ alias Backend.StatisticServer
 
 StatisticServer.store_users()
 StatisticServer.store_users2()
+
+:init.stop()

@@ -1,0 +1,78 @@
+<!-- livebook:{"file_entries":[{"name":"thank_you.png","type":"attachment"}]} -->
+
+# Mnesia real-time distributed database on clustering Elixir nodes
+
+## Brief contents
+
+* [1. About Me - Lý Nhật Tâm](#1-about-me---lý-nhật-tâm)
+* [2. About My Team (Ohhi.vn team)](#2-about-my-team-ohhivn-team)
+* [3 Mnesia](#3-mnesia)
+  * [3.1. Definition](#31-definition)
+  * [3.2. Table types](#32-table-types)
+  * [3.3. Storage strategy](#33-storage-strategy)
+  * [3.4. Mnesia Transaction](#34-mnesia-transaction)
+  * [3.5. References:](#35-references)
+* [4. Question \& Discussion](#4-question--discussion)
+
+### 1. About Me - Lý Nhật Tâm
+
+* Software Engineer with 4 years experience working with Erlang.
+* 1+ year with Elixir.
+* Current company and position: [Adabeat company](https://adabeat.com/), Cisco Consultant.
+* My linkedIn: [Link](https://www.linkedin.com/in/t%C3%A2m-l%C3%BD-nh%E1%BA%ADt-5a3972177/)
+
+### 2. About My Team (Ohhi.vn team)
+
+* Started in 2022, first project from 2023.
+* Target about Elixir/Erlang ecosystem & try to do something interesting.
+* Team has already contributed 2 open source projects.
+* Contact: info@ohhi.vn.
+
+### 3 Mnesia
+
+#### 3.1. Definition
+
+Mnesia is a distributed database management system written in Erlang and part of the OTP (Open Telecom Platform) framework.
+
+Mnesia is designed to meet requirements such as:
+
+• Fast real-time key-value lookup.
+• Distributed data (due to the distributed nature of the applications).
+• High fault tolerance.
+• Dynamic reconfiguration.
+• Complex objects.
+
+Mnesia is not as appropriate for applications that:
+• Tree structure.
+• Design for a traditional relational database.
+• Process plain text or binary data files.
+
+#### 3.2. Table types
+
+* **set**: A set table will tell you that each key instance must be unique.
+
+* **ordered_set**: Similar to `set` but ordered by Erlang/Elixir term. It is important to note that key comparison is different within ordered_set. Keys need not match so long as they compare equally. 1 and 1.0 are considered equal.
+
+* **bag**: A bag table can have multiple entries with the same key, as long as the tuples themselves are different (`{key, some, values}` and `{key, other, values}`)
+
+#### 3.3. Storage strategy
+
+* **ram_copies**: This option makes it so all data is stored exclusively in ETS, so memory only. A table can be replicated on a number of Erlang nodes.
+
+* **disc_only_copies**: Table replicas can be kept on disc only.
+
+* **disc_copies**:  This property specifies a list of Erlang nodes where the table is kept in RAM and on disc.
+
+#### 3.4. Mnesia Transaction
+
+* Mnesia transaction is a mechanism by which a series of database operations can be executed as one functional block. It succeeds entirely or fails entirely and it guaranteed that the tables were left in a consistent state.
+
+#### 3.5. References:
+
+[Erlang Mnesia](https://www.erlang.org/doc/man/mnesia)<br>
+[Elixirschool Mnesia](https://elixirschool.com/en/lessons/storage/mnesia)<br>
+[Mnesia pdf](https://www.erlang.org/doc/apps/mnesia/mnesia.pdf)<br>
+
+### 4. Question & Discussion
+
+![Thank you](files/thank_you.png)
