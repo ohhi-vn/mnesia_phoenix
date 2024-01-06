@@ -6,7 +6,7 @@
 
 * [1. About Me - Lý Nhật Tâm](#1-about-me---lý-nhật-tâm)
 * [2. About My Team (Ohhi.vn team)](#2-about-my-team-ohhivn-team)
-* [3 Mnesia](#3-mnesia)
+* [3. Mnesia](#3-mnesia)
   * [3.1. Definition](#31-definition)
   * [3.2. Table types](#32-table-types)
   * [3.3. Storage strategy](#33-storage-strategy)
@@ -16,7 +16,7 @@
 
 ### 1. About Me - Lý Nhật Tâm
 
-* Software Engineer with 4 years experience working with Erlang.
+* Software Engineer with 4+ years experience working with Erlang.
 * 1+ year with Elixir.
 * Current company and position: [Adabeat company](https://adabeat.com/), Cisco Consultant.
 * My linkedIn: [Link](https://www.linkedin.com/in/t%C3%A2m-l%C3%BD-nh%E1%BA%ADt-5a3972177/)
@@ -28,7 +28,7 @@
 * Team has already contributed 2 open source projects.
 * Contact: info@ohhi.vn.
 
-### 3 Mnesia
+### 3. Mnesia
 
 #### 3.1. Definition
 
@@ -36,16 +36,17 @@ Mnesia is a distributed database management system written in Erlang and part of
 
 Mnesia is designed to meet requirements such as:
 
-• Fast real-time key-value lookup.
-• Distributed data (due to the distributed nature of the applications).
-• High fault tolerance.
-• Dynamic reconfiguration.
-• Complex objects.
+* Fast real-time key-value lookup.
+* Distributed data (due to the distributed nature of the applications).
+* High fault tolerance.
+* Dynamic reconfiguration.
+* Complex objects.
 
 Mnesia is not as appropriate for applications that:
-• Tree structure.
-• Design for a traditional relational database.
-• Process plain text or binary data files.
+
+* Tree structure.
+* Design for a traditional relational database.
+* Process plain text or binary data files.
 
 #### 3.2. Table types
 

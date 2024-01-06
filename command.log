@@ -38,9 +38,51 @@ end
 
 alias Backend.StatisticServer
 
-StatisticServer.store_users()
-StatisticServer.store_users2()
-
 StatisticServer.simulate_store_users(10)
 
+StatisticServer.get_all_users()
+
 :init.stop()
+
+create = :mnesia.add_table_copy(:statistic, node, :ram_copies)
+
+pid = Process.whereis(:statistic_server)
+Process.exit(pid, :kill)
+
+
+benchmark:
+
+
+    Benchee.run(%{"benchmark list" => fn ->
+      trans = fn ->
+        fun = fn _i ->
+          random_num = generate_random_number()
+          random_string = generate_random_string()
+          id = :erlang.phash2({random_num, random_string})
+          :mnesia.write({:statistic, id, random_string})
+        end
+        Enum.each(1..num, fun)
+      end
+
+      :mnesia.transaction(trans)
+    end,
+
+    "benchmark task" => fn ->
+      max_concurrency = System.schedulers_online() * 1000
+      1..num
+      |> Task.async_stream(
+        fn _i ->
+          spawn(fn ->
+            write_action = fn ->
+              random_num = generate_random_number()
+              random_string = generate_random_string()
+              id = :erlang.phash2({random_num, random_string})
+
+              :mnesia.write({:statistic, id, random_string})
+            end
+            :mnesia.transaction(write_action)
+          end)
+        end,
+        max_concurrency: max_concurrency)
+      |> Enum.to_list()
+    end})

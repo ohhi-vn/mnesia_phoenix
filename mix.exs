@@ -47,7 +47,8 @@ defmodule SupervisorPhoenix.MixProject do
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:bandit, "~> 1.0"},
-      {:libcluster, "~> 3.3"}
+      {:libcluster, "~> 3.3"},
+      {:benchee, "~> 1.3.0"}
     ]
   end
 

@@ -24,7 +24,7 @@ defmodule SupervisorPhoenix.Application do
       {Finch, name: SupervisorPhoenix.Finch},
       # Start the Endpoint (http/https)
       SupervisorPhoenixWeb.Endpoint,
-      Backend.StatisticServer
+      %{id: SupervisorPhoenix.Backend.StatisticServer, start: {SupervisorPhoenix.Backend.StatisticServer, :start_link, [[]]}}
       # Start a worker by calling: SupervisorPhoenix.Worker.start_link(arg)
       # {SupervisorPhoenix.Worker, arg}
     ]
