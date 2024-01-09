@@ -59,6 +59,7 @@ defmodule SupervisorPhoenix.Backend.StatisticServer do
 
   @impl true
   def handle_info(:terminate, state) do
+    Logger.info("received terminate message.")
     Process.exit(Process.whereis(:statistic_server), :kill)
     {:noreply, state}
   end

@@ -1,5 +1,17 @@
 # Mnesia real-time distributed database on clustering Elixir nodes
+
+## Introduce
+
+This is simple demo for sharing topic "Mnesia real-time distributed database on clustering Elixir nodes"
+
 ## Guide
+
+To run demo, please follow step.
+
+```elixir
+cd mnesia_phoenix
+mix deps.get
+```
 
 To start app:
 

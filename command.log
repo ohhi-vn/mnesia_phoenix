@@ -2,16 +2,16 @@ proc = Process.whereis(:statistic_server)
 
 Process.send(proc, :terminate, [])
 :mnesia.change_table_copy_type(:statistic_server, node(), :disc_copies)
-:mnesia.table_info(:statistic, :all)
+:mnesia.table_info(:statistic, :all_nodes)
 
 
 
 Start Node
 
 * Terminal 1:
-  RELEASE_COOKIE=abc PORT=4000 iex --sname a@localhost --cookie abc -S mix phx.server
+  PORT=4000 iex --sname a@localhost --cookie abc -S mix phx.server
 * Terminal 2:
-  PRELEASE_COOKIE=abc PORT=4001 iex --sname b@localhost --cookie abc -S mix phx.server
+  PORT=4001 iex --sname b@localhost --cookie abc -S mix phx.server
 
 write_action = fn ->
   :mnesia.write({:statistic, 1, "foo"})
@@ -36,18 +36,20 @@ end
 :mnesia.delete_table(:statistic)
 
 
-alias Backend.StatisticServer
+alias SupervisorPhoenix.Backend.StatisticServer
 
 StatisticServer.simulate_store_users(10)
 
 StatisticServer.get_all_users()
 
-:init.stop()
-
 create = :mnesia.add_table_copy(:statistic, node, :ram_copies)
 
 pid = Process.whereis(:statistic_server)
 Process.exit(pid, :kill)
+
+send(pid, :terminate)
+
+:init.stop()
 
 
 benchmark:
