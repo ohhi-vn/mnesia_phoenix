@@ -1,4 +1,4 @@
-<!-- livebook:{"file_entries":[{"name":"thank_you.png","type":"attachment"}]} -->
+<!-- livebook:{"file_entries":[{"name":"live_demo.png","type":"attachment"},{"name":"thank_you.png","type":"attachment"}]} -->
 
 # Mnesia real-time distributed database on clustering Elixir nodes
 
@@ -12,7 +12,8 @@
   * [3.3. Storage strategy](#33-storage-strategy)
   * [3.4. Mnesia Transaction](#34-mnesia-transaction)
   * [3.5. References:](#35-references)
-* [4. Question \& Discussion](#4-question--discussion)
+* [4. Demo](#4-demo)
+* [5. Question \& Discussion](#5-question--discussion)
 
 ### 1. About Me - Lý Nhật Tâm
 
@@ -38,8 +39,8 @@ Mnesia is designed to meet requirements such as:
 
 * Fast real-time key-value lookup.
 * Distributed data (due to the distributed nature of the applications).
-* High fault tolerance.
-* Dynamic reconfiguration.
+* High fault tolerance (Tables can be moved or replicated to several nodes to improve fault tolerance.).
+* Dynamic reconfiguration at runtime.
 * Complex objects.
 
 Mnesia is not as appropriate for applications that:
@@ -47,6 +48,11 @@ Mnesia is not as appropriate for applications that:
 * Tree structure.
 * Design for a traditional relational database.
 * Process plain text or binary data files.
+
+Use case:
+
+* Configuration for cluster.
+* Light weight database.
 
 #### 3.2. Table types
 
@@ -74,6 +80,10 @@ Mnesia is not as appropriate for applications that:
 [Elixirschool Mnesia](https://elixirschool.com/en/lessons/storage/mnesia)<br>
 [Mnesia pdf](https://www.erlang.org/doc/apps/mnesia/mnesia.pdf)<br>
 
-### 4. Question & Discussion
+### 4. Demo
+
+![Demo](files/live_demo.png)
+
+### 5. Question & Discussion
 
 ![Thank you](files/thank_you.png)

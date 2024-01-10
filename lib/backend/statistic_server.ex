@@ -15,10 +15,17 @@ defmodule SupervisorPhoenix.Backend.StatisticServer do
     GenServer.start_link(__MODULE__, %{current_users: 0}, name: :statistic_server)
   end
 
+  @doc """
+  Returns the number of records inserted in the statistic_server table.
+  """
   def get_all_users() do
     GenServer.call(:statistic_server, :get_all_users)
   end
 
+  @doc """
+  Simulate to add number of record with {:statistic, id, random_string} format.
+  Using Task to redude the perfomance impact when adding large number.
+  """
   def simulate_store_users(num) do
 
     max_concurrency = System.schedulers_online() * 10
@@ -41,7 +48,6 @@ defmodule SupervisorPhoenix.Backend.StatisticServer do
   end
 
   defp generate_random_number() do
-    # Change 1000000000 to the desired upper limit for random numbers
     :rand.uniform(1000000000)
   end
 
